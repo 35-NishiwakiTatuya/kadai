@@ -4,27 +4,22 @@
 <title></title>
 </head>
 <body>
-<form action="get_confirm.php" method="get">
-	名前: <input type="text" name="name" />
-	年齢: <input type="text" name="age" />
-	<input type="submit" />
-</form>
-<form action="post_confirm.php" method="post">
-	名前: <input type="text" name="name" />
-	年齢: <input type="text" name="age" />
-	<input type="submit" />
-</form>
-<ul>
-<li><a href="hensu.php">変数</a></li>
-<li><a href="hairetsu.php">配列</a></li>
-<li><a href="seigyo.php">制御構文</a></li>
-<li><a href="kansu.php">関数</a></li>
-</ul>
+<form action="input_enq.php" method="get">
+	名前: <input type="text" name="name" /><br>
+	E-mail: <input type="text" name="email" /><br>
+	年齢: <input type="text" name="age" /><br>
+	性別: <input type="radio" name="q1" value="男性"/>男性
+	      <input type="radio" name="q1" value="女性"/>女性<br>
+	      趣味： 
+<input name="fCheck1" type="checkbox" value="走る">走る 
+<input name="fCheck2" type="checkbox" value="自転車">自転車 
 
-<ul>
-<li><a href="write.php">ファイル書き込み</a></li>
-<li><a href="read.php">ファイル読み込む</a></li>
-</ul>
+	      
+	<input type="submit" />
+	
+</form>
+
+
 
 </body>
 </html>
