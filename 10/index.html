@@ -18,7 +18,6 @@
         var ds = milkcocoa.dataStore("message");
         //3."message"データストアからメッセージを取ってくる
         ds.stream().sort("asc").next(function(err, datas) {
-
             datas.forEach(function(data) {
                 renderMessage(data);
             });
@@ -67,15 +66,13 @@
             }
         });
                 function remove() {
-        //6."message"データストアからメッセージを全て削除する
-            ds.query().done(function(data){
+        //6."message"をメッセージを全て削除する
                 data.forEach(function(value){
-                    ds.remove(value.id);
+                    ds.remove(id.value);
                 });
-            });
         }
         $('#delete').click(function () {
-            remove();
+            remove(id.value);
         })
     });
     //インジェクション対策
@@ -87,7 +84,7 @@
 
 <body>
     <div class="header">
-        <h1 class="logo">自力で作ったチャット</h1>
+        <h1 class="logo">課題用のチャット</h1>
     </div>
 
    <!--ここに名前を入れるものを作り出す-->
@@ -95,6 +92,7 @@
         <form>
         <div class="post-name cf">
             <div class="post-name">
+               <p>名前</p>
                 <input id="name" type="text" value="" size="24" placeholder="名前を入力">
             </div>
         </div>
@@ -104,21 +102,20 @@
            <p>メッセージ内容</p>
         <div class="postarea cf">
             <div class="postarea-text">
-                <textarea name="" id="content" cols="30" rows="10" placeholder="Enterで投稿"></textarea>
+                <textarea name="" id="content" cols="30" rows="10" placeholder="内容を入力"></textarea>
             </div>
 
             <button id="post" class="postarea-button">投稿する</button>
+            
+            <!--削除ボタンをここに設置すること　多分リムーブを使うことになると思う。　課題用コメント-->
+    <button id="delete" class="delete-button">削除</button>
         </div>
         </form>
     </div>
-           
-            <!--削除ボタンをここに設置すること　多分リムーブを使うことになると思う。　課題用コメント-->
-   
+        
     <div id="messages" class="content">
         <div id="dummy"></div>
     </div>
-    
-        <button id="delete" class="delete-button">すべて削除</button>
     
     <p class="footer"><strong>Powered by <a href="http://mlkcca.com/">Milkcocoa</a></strong></p>
 </body>
