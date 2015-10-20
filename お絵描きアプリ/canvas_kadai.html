@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>canvas_kadai.html</title>
+        <style>
+        #slider {
+            width: 600px;
+        }
+        </style>
+    </head>
+    
+    <body>
+        <section>
+            <h1>お絵描きアプリ</h1>
+            <nav>
+
+                <div style="float:left;">線の設定：<input id="weight" type="range" min="0" max="100" width="200" value="1" />
+                    <select id="colors">
+                        <option value="#000000">ブラック</option>
+                        <option value="#555555">グレー</option>
+                        <option value="#FFC0CB">ピンク</option>
+                        <option value="#800080">パープル</option>
+                        <option value="#0000FF">ブルー</option>
+                        <option value="#00FFFF">アクア</option>
+                        <option value="#008000">グリーン</option>
+                        <option value="#00FF00">ライム</option>
+                        <option value="#FFFF00">イエロー</option>
+                        <option value="#FFA500">オレンジ</option>
+                        <option value="#FF0000">レッド</option>
+                    </select>
+
+                </div>
+                <div style="clear: both;float:left;">操作：
+                    <button id="save_btn">セーブ</button>
+                    <button id="clear_btn">クリアー</button>
+                    <span id="cs"></span>
+                </div>
+            </nav>
+            <div style="clear: both;float:left;">
+                <canvas id="drowarea" width="500" height="500" style="border:1px solid blue;"></canvas>
+            </div>
+            
+            <div style="float: left;width: 500px;height:500px;border: 1px solid #CCC;">
+                <div>
+                <div id="tmp_canvas"></div>
+            </div>
+        </section>
+        <script>
+            //初期化
+            var canvas_mouse_event = false;
+            var txy   = 0;  //iPadなどは15＋すると良いかも
+            var oldX  = 0;  //１つ前の座標を代入
+            var oldY  = 0;  //１つ前の座標を代入
+            var color = "#000000";
+            var bold_line = 1;
+            var can = document.getElementById("drowarea");
+            var context = can.getContext("2d");
+            
+            //Image
+            var img = new Image();
+            img.src = "./images/sp.gif";
+            img.onload = function(){
+                context.drawImage(img,0,0);
+            };
+            
+            //キャンパスクリア
+            var canClear = function (){
+                context.beginPath();
+                context.clearRect(0, 0, can.width, can.height);
+            };
+
+            //MouseEvent[mouseDown]
+            can.addEventListener("mousedown", function(e){
+                oldX = e.offsetX;
+                oldY = e.offsetY-txy;
+                canvas_mouse_event=true;
+            },false);
+            
+            //MouseEvent[mouseMove]
+            can.addEventListener("mousemove", function (e){
+                if(canvas_mouse_event==true){
+                    var px = e.offsetX;
+                    var py = e.offsetY - txy;
+                    context.strokeStyle = color;
+                    context.lineWidth = bold_line;
+                    context.lineJoin= "round";  // 連結部分を丸にする         
+                    context.lineCap = "round";
+                    context.beginPath();
+                    context.moveTo(oldX, oldY);
+                    context.lineTo(px, py);
+                    context.stroke();
+                    context.fill();
+                    oldX = px;
+                    oldY = py;
+                }
+            }, false);	
+            
+            //MouseEvent[mouseUp]
+            can.addEventListener("mouseup", function(e){
+                canvas_mouse_event=false;
+            }, false);
+            
+            //MouseEvent[mouseout]
+            can.addEventListener("mouseout", function(e){
+                canvas_mouse_event=false;
+            }, false);
+            
+            //色SelectAtion
+            document.getElementById('colors').onchange = function (){
+                color = document.getElementById("colors").value;
+            };
+
+            //線太さSelectAction
+            document.getElementById('weight').onchange = function (){
+                bold_line = parseInt(document.getElementById("weight").value);
+            };
+
+            //クリアーボタンAction
+            document.getElementById('clear_btn').onclick = function (){
+                canClear();
+            };
+
+
+            //---------------------------------------------------------------
+            //おまけ機能の紹介！
+            //保存機能
+            //---------------------------------------------------------------
+            document.getElementById('save_btn').onclick = function (){
+                var getval = can.toDataURL();
+                if(localStorage.getItem("gcount")){
+                }else{
+                    localStorage.setItem( "gcount", 0);
+                }
+                var count  = localStorage.getItem("gcount");
+                var gid    = parseInt(count) + 1;
+                localStorage.setItem( gid.toString(), getval );
+                localStorage.setItem( "gcount", gid );
+                historyUpdate();
+            };
+            
+            var historyUpdate = function (){
+               var c = localStorage.getItem("gcount");
+               var str = '<select id="load_canvas_list" onchange="select_data();">';
+               for(var i=0; i<=c; i++){
+                   str += '<option value="' + i + '"> ' + i + ' </option>';
+               }
+               str += '</select>';
+               document.getElementById('cs').innerHTML = str;
+            };
+            
+            var select_data = function (){
+                var img = localStorage.getItem( document.getElementById('load_canvas_list').value );
+                if(document.getElementById("tmp_img")){
+                    var d = document.getElementById("tmp_canvas"); 
+                    var elem = document.getElementById("tmp_img"); 
+                    d.removeChild(elem);
+                }
+                var ei = document.createElement("img");
+                ei.src = img;
+                ei.id = "tmp_img";
+                document.getElementById("tmp_canvas").appendChild(ei);
+            };
+            
+            window.onload = function(){
+                historyUpdate();
+            };
+
+    </script>
+    </body>
+</html>
